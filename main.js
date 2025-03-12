@@ -30,6 +30,7 @@ addToDoButton.addEventListener("click", function () {
   paragraph.innerText = inputField.value.trim();
   // assigns the location of paragraph element inside the toDoContainer div
   toDoContainer.appendChild(paragraph);
+  saveTasks();
   // resets input field after clicking button
   inputField.value = "";
 
@@ -40,10 +41,22 @@ addToDoButton.addEventListener("click", function () {
     } else {
       paragraph.style.textDecoration = "line-through";
     }
+    saveTasks();
   });
 
   // removes from list if double-clicked, regardless of line-through status
   paragraph.addEventListener("dblclick", function () {
     toDoContainer.removeChild(paragraph);
+    saveTasks();
   });
 });
+
+// saves to local storage
+function saveTasks() {
+  let tasks = [];
+  toDoContainer.querySelectorAll("p").forEach(function (item) {
+    tasks.push(item.innerText.trim());
+  });
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
