@@ -4,7 +4,6 @@ const addToDoButton = document.getElementById("addToDo");
 const toDoContainer = document.getElementById("toDoContainer");
 // assigns variable "inputField" to HTML field "inputField"
 const inputField = document.getElementById("inputField");
-const paragraph = document.createElement("p");
 
 // ensures theres not a blank submission for a task
 function isBlank() {
@@ -23,7 +22,9 @@ addToDoButton.addEventListener("click", function () {
   if (isBlank()) {
     return;
   }
+
   // creates a paragraph element in HTML for each click on the user's to do list
+  const paragraph = document.createElement("p");
   paragraph.classList.add("paragraph-styling");
   // allows us to assign user input into the field and convert it to html (p element)
   paragraph.innerText = inputField.value.trim();
@@ -31,18 +32,18 @@ addToDoButton.addEventListener("click", function () {
   toDoContainer.appendChild(paragraph);
   // resets input field after clicking button
   inputField.value = "";
-});
 
-// puts line through item when clicking on it and removes when clicked again
-paragraph.addEventListener("click", function () {
-  if (paragraph.style.textDecoration === "line-through") {
-    paragraph.style.textDecoration = "none";
-  } else {
-    paragraph.style.textDecoration = "line-through";
-  }
-});
+  // puts line through item when clicking on it and removes when clicked again
+  paragraph.addEventListener("click", function () {
+    if (paragraph.style.textDecoration === "line-through") {
+      paragraph.style.textDecoration = "none";
+    } else {
+      paragraph.style.textDecoration = "line-through";
+    }
+  });
 
-// removes from list if double-clicked, regardless of line-through status
-paragraph.addEventListener("dblclick", function () {
-  toDoContainer.removeChild(paragraph);
+  // removes from list if double-clicked, regardless of line-through status
+  paragraph.addEventListener("dblclick", function () {
+    toDoContainer.removeChild(paragraph);
+  });
 });
