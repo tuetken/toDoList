@@ -14,6 +14,25 @@ function isBlank() {
   }
 }
 
+// adds event listeners to a task element
+function addTaskEventListeners(paragraph) {
+  // puts line through item when clicking on it and removes when clicked again
+  paragraph.addEventListener("click", function () {
+    if (paragraph.style.textDecoration === "line-through") {
+      paragraph.style.textDecoration = "none";
+    } else {
+      paragraph.style.textDecoration = "line-through";
+    }
+    saveTasks();
+  });
+
+  // removes from list if double-clicked, regardless of line-through status
+  paragraph.addEventListener("dblclick", function () {
+    toDoContainer.removeChild(paragraph);
+    saveTasks();
+  });
+}
+
 addToDoButton.addEventListener("click", function () {
   if (isBlank()) {
     return;
@@ -30,29 +49,32 @@ addToDoButton.addEventListener("click", function () {
 
   inputField.value = ""; // clears input for next task
 
-  // puts line through item when clicking on it and removes when clicked again
-  paragraph.addEventListener("click", function () {
-    if (paragraph.style.textDecoration === "line-through") {
-      paragraph.style.textDecoration = "none";
-    } else {
-      paragraph.style.textDecoration = "line-through";
-    }
-    saveTasks();
-  });
-
-  // removes from list if double-clicked, regardless of line-through status
-  paragraph.addEventListener("dblclick", function () {
-    toDoContainer.removeChild(paragraph);
-    saveTasks();
-  });
+  addTaskEventListeners(paragraph);
 });
 
 // saves to local storage
 function saveTasks() {
-  let tasks = [];
-  toDoContainer.querySelectorAll("p").forEach(function (item) {
-    tasks.push(item.innerText.trim());
+  let taskList = [];
+  toDoContainer.querySelectorAll("p").forEach(function (taskItem) {
+    taskList.push(taskItem.innerText.trim());
   });
 
-  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("tasks", JSON.stringify(taskList));
 }
+
+// loads from local storage
+function loadTasks() {
+  const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  storedTasks.forEach(function (task) {
+    const paragraph = document.createElement("p");
+    paragraph.classList.add("paragraph-styling");
+    paragraph.innerText = task;
+
+    toDoContainer.appendChild(paragraph);
+    addTaskEventListeners(paragraph);
+  });
+}
+
+// Call loadTasks when the page loads
+window.addEventListener("load", loadTasks);
